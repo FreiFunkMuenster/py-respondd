@@ -73,7 +73,7 @@ class Net(object):
 
 	def sender(self, message, sender):
 		message = bytes('{}'.format(json.dumps(message)), 'utf-8')
-		message = zlib.compress(message)
+		message = zlib.compress(message)[2:-4]
 		self.sock.sendto(message + b'\0', sender)
 
 	def get_ip_address(self, ifname):
