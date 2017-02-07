@@ -81,7 +81,7 @@ class Statistics(BasicNode):
 		fd.close()
 		return n_stats, strings
 
-	def updateBatNeigh(self):
+	def updateBatNeigh(self, *args):
 		fd = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
 		stats = struct.pack('IIQ'+str(self.n_stats*8)+'s',Statistics.ETHTOOL_GSTATS,self.n_stats,0,b'') #fixme: use Q instead 8*s
 		stats_arr = array.array('B',stats)
@@ -95,25 +95,25 @@ class Statistics(BasicNode):
 		return Cache.getGlobal('mem_stats', self.updateMemStats)
 
 	@staticmethod
-	def updateMemStats():
+	def updateMemStats(*args):
 		return psutil.virtual_memory()
 
 	def getBootTime(self):
 		return Cache.getGlobal('boot_time', Statistics.updateBootTime)
 
 	@staticmethod
-	def updateBootTime():
+	def updateBootTime(*args):
 		return psutil.boot_time()
 
 	@staticmethod
-	def updateProcessIter():
+	def updateProcessIter(*args):
 		return psutil.process_iter()
 
 	def getProcessCounts(self):
 		return Cache.getGlobal('process_counts', Statistics.updateProcessCounts)
 
 	@staticmethod
-	def updateProcessCounts():
+	def updateProcessCounts(*args):
 		total = 0
 		running = 0
 		for p in Cache.getGlobal('process_iter', Statistics.updateProcessIter):

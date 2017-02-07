@@ -29,7 +29,7 @@ def init(jsonData):
 	for domain in jsonData['domains']:
 		domains[domain['site_code']] = {
 			'neighbours' : Neighbours(domain),
-			'nodeinfo' : Nodeinfo(domain),
+			'nodeinfo' : Nodeinfo(domain, jsonData['global']),
 			'statistics' : Statistics(domain)
 		}
 	return domains
@@ -39,6 +39,7 @@ def main(argv):
 	handles = init(data)
 
 	Cache.setTimeout(data['global']['cache_time_s'])
+
 	net = Net(data, handles)
 
 	# for debugging purposes only:
@@ -51,7 +52,6 @@ def main(argv):
 	# print(handles['ffmsd01']['neighbours'].get())
 
 	net.receiver()
-	#print(Neighbours)
-
+	
 if __name__ == '__main__':
 	main(sys.argv[1:])

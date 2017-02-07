@@ -1,9 +1,13 @@
-import glob, socket, psutil
+import glob, socket, re, psutil, netifaces
 from .Cache import Cache
 from .BasicNode import BasicNode
 class Nodeinfo(BasicNode):
-	def __init__(self, domain):
-		self.domain = domain
+	def __init__(self, domainData, globalData):
+		self.domain = domainData
+		self.globalData = globalData
+		self.interfaceTypeRegexPatterns = None
+		if 'interface_type_regex_patterns' in self.globalData:
+			self.interfaceTypeRegexPatterns = self.prepareInterfaceRegex(self.globalData['interface_type_regex_patterns'])
 
 	def get(self):
 		cpuCount, cpuType = self.cpuInfo()
@@ -30,10 +34,7 @@ class Nodeinfo(BasicNode):
 				'addresses': self.getV6Addrs(),
 				'mesh': {
 					self.domain['bat_iface'] : {
-						'interfaces': {
-							'tunnel': self.getTunnMacAddrs(),
-							'other': [self.getMacAddr()]
-						}
+						'interfaces': self.getInterfaceMacs()
 					}
 				},
 				'mac': self.getMacAddr()
@@ -49,18 +50,24 @@ class Nodeinfo(BasicNode):
 		}
 		return nodeInfo
 
+	def prepareInterfaceRegex(self,config):
+		res = {}
+		for k,v in config.items():
+			res[k] = re.compile(v)
+		return res
+
 	def getHostname(self):
 		return Cache.getGlobal('hostname', Nodeinfo.updateHostname)
 		
 	@staticmethod
-	def updateHostname():
+	def updateHostname(args):
 		return socket.gethostname()
 
 	def getProcessList(self):
 		return Cache.getGlobal('process_list', Nodeinfo.updateProcessList)
 
 	@staticmethod
-	def updateProcessList():
+	def updateProcessList(args):
 		return [[p.name(),p.cmdline()] for p in Cache.getGlobal('process_iter', Nodeinfo.updateProcessIter)]
 
 	def isProcessRunning(self, processName, processArg = None):
@@ -78,19 +85,15 @@ class Nodeinfo(BasicNode):
 	def getV6Addrs(self):
 		return Cache.getLocal('iface_v6', self.domain['site_code'], self.updateV6Addrs)
 
-	def updateV6Addrs(self):
-		addrs = self.getAddrsOfIface(self.domain['bat_iface'])
-		v6addrs = []
-		for a in addrs:
-			if a.family == 10:
-				v6addrs.append(a.address.split('%')[0])
-		return v6addrs
+	def updateV6Addrs(self, *args):
+		addrs = self.getAddrsOfIface(self.domain['bat_iface'])[netifaces.AF_INET6]
+		return [x['addr'] for x in addrs]
 
 	def cpuInfo(self):
 		return Cache.getGlobal('cpu_info', Nodeinfo.updateCpuInfo)
 
 	@staticmethod
-	def updateCpuInfo():
+	def updateCpuInfo(*args):
 		with open('/proc/cpuinfo', 'r') as f:
 			cpuinfo = f.readlines()
 		cpuType = None
@@ -105,13 +108,41 @@ class Nodeinfo(BasicNode):
 	def getTunnMacAddrs(self):
 		return Cache.getLocal('tun_mac_addr', self.domain['site_code'], self.updateTunnMacAddrs)
 
-	def updateTunnMacAddrs(self):
+	def updateTunnMacAddrs(self, *args):
 		macs = []
 		fl = glob.glob('/sys/class/net/'+self.domain['bat_iface']+'/lower_*/address')
 		for fe in fl:
-			macs.append(open(fe, 'r').read()[:-1])
+			macs.append([fe.split('lower_')[1].split('/')[0],open(fe, 'r').read()[:-1]])
 		return macs
 
+	def getInterfaceMacs(self):
+		return Cache.getLocal('iface_mac_addr', self.domain['site_code'], self.updateInterfaceMacs)
+
+	def updateInterfaceMacs(self, *args):
+		ifaces = self.getTunnMacAddrs()
+
+		res = {
+			'other': [self.getMacAddr()]
+		}
+		if self.interfaceTypeRegexPatterns != None:
+			for iface in ifaces:
+				for k,v in self.interfaceTypeRegexPatterns.items():
+					if v.search(iface[0]) is not None:
+						if k not in res:
+							res[k] = [iface[1]]
+						else:
+							res[k].append(iface[1])
+						break
+				else:
+					if k not in res:
+						res['tunnel'] = [iface[1]]
+					else:
+						res['tunnel'].append(iface[1])
+		else:
+			res['tunnel'] = [x[1] for x in ifaces]
+
+
+		return res
 	@staticmethod
-	def updateProcessIter():
+	def updateProcessIter(*args):
 		return psutil.process_iter()

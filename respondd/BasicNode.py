@@ -1,4 +1,4 @@
-import psutil
+import netifaces
 from .Cache import Cache
 class BasicNode(object):
 
@@ -6,24 +6,19 @@ class BasicNode(object):
 		return Cache.getGlobal('batman_version', BasicNode.updateBatmanVersion)
 
 	@staticmethod
-	def updateBatmanVersion():
+	def updateBatmanVersion(*args):
 		return open('/sys/module/batman_adv/version', 'r').read()[:-1]
 
 	def getAddrsOfIface(self, ifName):
-		ifaces = Cache.getGlobal('ifaces_addrs', BasicNode.updateNetIfAddrs)
-		if ifName in ifaces:
-			return ifaces[ifName]
-		return []
+		return Cache.getGlobal('ifaces_addrs_' + ifName, BasicNode.updateNetIfAddrs, ifName)
 
 	@staticmethod
-	def updateNetIfAddrs():
-		return psutil.net_if_addrs()
+	def updateNetIfAddrs(*args):
+		print(args)
+		return netifaces.ifaddresses(args[0])
 
 	def getMacAddr(self):
 		return Cache.getLocal('iface_mac', self.domain['site_code'], self.updateMacAddr)
 
-	def updateMacAddr(self):
-		addrs = self.getAddrsOfIface(self.domain['bat_iface'])
-		for a in addrs:
-			if a.family == 17:
-				return a.address
+	def updateMacAddr(self, *args):
+		return self.getAddrsOfIface(self.domain['bat_iface'])[netifaces.AF_LINK][0]['addr']

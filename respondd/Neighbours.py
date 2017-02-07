@@ -19,7 +19,7 @@ class Neighbours(BasicNode):
 	def getNeights(self):
 		return Cache.getLocal('bat_stats', self.domain['site_code'], self.updateNeights)
 
-	def updateNeights(self):
+	def updateNeights(self, *args):
 		res = {}
 		out, err = self.execBatProcess()
 		
@@ -51,6 +51,6 @@ class Neighbours(BasicNode):
 	def execBatProcess(self):
 		return Cache.getLocal('bat_process_o', self.domain['site_code'], self.updateBatProcess)
 
-	def updateBatProcess(self):
+	def updateBatProcess(self, *args):
 		p = subprocess.Popen(['batctl', '-m', self.domain['bat_iface'], 'o'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		return p.communicate()
