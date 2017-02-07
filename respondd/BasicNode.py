@@ -2,6 +2,13 @@ import psutil
 from .Cache import Cache
 class BasicNode(object):
 
+	def getBatmanVersion(self):
+		return Cache.getGlobal('batman_version', BasicNode.updateBatmanVersion)
+
+	@staticmethod
+	def updateBatmanVersion():
+		return open('/sys/module/batman_adv/version', 'r').read()[:-1]
+
 	def getAddrsOfIface(self, ifName):
 		ifaces = Cache.getGlobal('ifaces_addrs', BasicNode.updateNetIfAddrs)
 		if ifName in ifaces:

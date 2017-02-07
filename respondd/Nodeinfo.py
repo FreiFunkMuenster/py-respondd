@@ -13,7 +13,7 @@ class Nodeinfo(BasicNode):
 					'enabled': False
 				},
 				'batman-adv': {
-					'version': open('/sys/module/batman_adv/version', 'r').read()[:-1]
+					'version': self.getBatmanVersion()
 				},
 				'fastd': {
 					'enabled': self.isProcessRunning('fastd')

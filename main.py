@@ -32,27 +32,24 @@ def init(jsonData):
 			'nodeinfo' : Nodeinfo(domain),
 			'statistics' : Statistics(domain)
 		}
-		# only one domain for debugging purposes
-		#break
 	return domains
 
 def main(argv):
 	data = getConfigFromFile(argv)
-	#print("init done")
 	handles = init(data)
-	#print(handles)
-	# Cache.setTimeout(data['global']['cache_time_s'])
 
 	Cache.setTimeout(data['global']['cache_time_s'])
 	net = Net(data, handles)
-	for k,v in handles.items():
-		v['nodeinfo'].get()
-		v['statistics'].get()
-		v['neighbours'].get()
-	print(handles['ffmsd01']['nodeinfo'].get())
-	print(handles['ffmsd01']['statistics'].get())
-	print(handles['ffmsd01']['neighbours'].get())
-	
+
+	# for debugging purposes only:
+	# for k,v in handles.items():
+	# 	v['nodeinfo'].get()
+	# 	v['statistics'].get()
+	# 	v['neighbours'].get()
+	# print(handles['ffmsd01']['nodeinfo'].get())
+	# print(handles['ffmsd01']['statistics'].get())
+	# print(handles['ffmsd01']['neighbours'].get())
+
 	net.receiver()
 	#print(Neighbours)
 

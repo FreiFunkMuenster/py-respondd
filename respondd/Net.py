@@ -17,10 +17,6 @@ class Net(object):
 
 		s = socket.socket(addrinfo[0], socket.SOCK_DGRAM)
 
-		# Allow multiple copies of this program on one machine
-		# (not strictly needed)
-		#s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
 		s.bind(('', self.port))
 
 		group_bin = socket.inet_pton(addrinfo[0], addrinfo[4][0])
@@ -43,7 +39,6 @@ class Net(object):
 			data, sender = self.sock.recvfrom(1500)
 			while data[-1:] == '\0': data = data[:-1] # Strip trailing \0's
 			self.handleRequest(sender,data)
-			print (str(sender) + '  ' + repr(data))
 
 	def genIfToSite(self, domains):
 		res = {}
