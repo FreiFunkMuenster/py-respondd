@@ -28,8 +28,6 @@ class Cache(object):
 			}
 		elif not Cache._isValid(Cache.globalCache[kw]['timestamp']):
 			Cache.globalCache[kw]['value'] = fx(args)
-		#else:
-		#	print("Cache used! [global, "+kw+']')
 
 		return Cache.globalCache[kw]['value']
 
@@ -49,8 +47,6 @@ class Cache(object):
 			}
 		elif not Cache._isValid(Cache.localCace[dom][kw]['timestamp']):
 			Cache.localCace[dom][kw]['value'] = fx(args)
-		#else:
-		#	print("Cache used! [local, "+kw+','+dom+']')
 
 		return Cache.localCace[dom][kw]['value']
 

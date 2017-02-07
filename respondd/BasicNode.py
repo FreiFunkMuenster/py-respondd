@@ -14,7 +14,6 @@ class BasicNode(object):
 
 	@staticmethod
 	def updateNetIfAddrs(*args):
-		print(args)
 		return netifaces.ifaddresses(args[0])
 
 	def getMacAddr(self):
