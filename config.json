@@ -1,0 +1,81 @@
+{
+	"global" : {
+		"mcast_group" : "ff02::2:1001",
+		"port" : 1001,
+		"cache_time_s" : 59
+	},
+	"domains" : [
+		{
+			"bat_iface": "bat01",
+			"site_code": "ffmsd01"
+		},
+		{
+			"bat_iface": "bat05",
+			"site_code": "ffmsd05"
+		},
+		{
+			"bat_iface": "bat07",
+			"site_code": "ffmsd07"
+		},
+		{
+			"bat_iface": "bat08",
+			"site_code": "ffmsd08"
+		},
+		{
+			"bat_iface": "bat09",
+			"site_code": "ffmsd09"
+		},
+		{
+			"bat_iface": "bat11",
+			"site_code": "ffmsd11"
+		},
+		{
+			"bat_iface": "bat15",
+			"site_code": "ffmsd15"
+		},
+		{
+			"bat_iface": "bat54",
+			"site_code": "ffmsd54"
+		},
+		{
+			"bat_iface": "bat55",
+			"site_code": "ffmsd55"
+		},
+		{
+			"bat_iface": "bat56",
+			"site_code": "ffmsd56"
+		},
+		{
+			"bat_iface": "bat57",
+			"site_code": "ffmsd57"
+		},
+		{
+			"bat_iface": "bat58",
+			"site_code": "ffmsd58"
+		},
+		{
+			"bat_iface": "bat59",
+			"site_code": "ffmsd59"
+		},
+		{
+			"bat_iface": "bat60",
+			"site_code": "ffmsd60"
+		},
+		{
+			"bat_iface": "bat61",
+			"site_code": "ffmsd61"
+		},
+		{
+			"bat_iface": "bat62",
+			"site_code": "ffmsd62"
+		},
+		{
+			"bat_iface": "bat63",
+			"site_code": "ffmsd63"
+		},
+		{
+			"bat_iface": "bat65",
+			"site_code": "ffmsd65"
+		}
+	]
+}

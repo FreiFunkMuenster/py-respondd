@@ -1,0 +1,3 @@
+apt: python3-pip
+pip3: psutil
+pip3: netifaces
