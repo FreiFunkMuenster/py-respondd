@@ -103,7 +103,7 @@ class Nodeinfo(BasicNode):
 		return (cpuCount, cpuType)
 
 	def getTunnMacAddrs(self):
-		return Cache.getLocal('tun_mac_addr', self.domain['site_code'], self.updateV6Addrs)
+		return Cache.getLocal('tun_mac_addr', self.domain['site_code'], self.updateTunnMacAddrs)
 
 	def updateTunnMacAddrs(self):
 		macs = []
