@@ -2,7 +2,7 @@ import string, subprocess, netifaces
 from .Cache import Cache
 from .BasicNode import BasicNode
 class Neighbours(BasicNode):
-	TT = dict.fromkeys(map(ord, '*[]()'), None)
+	TT = dict.fromkeys(map(ord, '*[]():'), None)
 	def __init__(self, domain):
 		self.domain = domain
 		self.ifMacs = {}
