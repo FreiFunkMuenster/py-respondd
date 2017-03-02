@@ -60,7 +60,7 @@ class Net(object):
 		if site not in self.handles:
 			# unconfigured domain
 			return
-		print(requestType, senderAddr, interface, site)
+		# print(requestType, senderAddr, interface, site)
 		message = {} 
 		message[requestType] = self.handles[site][requestType].get()
 		self.sender(message,sender)

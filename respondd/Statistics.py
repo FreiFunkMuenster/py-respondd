@@ -105,10 +105,6 @@ class Statistics(BasicNode):
 	def updateBootTime(*args):
 		return psutil.boot_time()
 
-	@staticmethod
-	def updateProcessIter(*args):
-		return psutil.process_iter()
-
 	def getProcessCounts(self):
 		return Cache.getGlobal('process_counts', Statistics.updateProcessCounts)
 
@@ -116,8 +112,8 @@ class Statistics(BasicNode):
 	def updateProcessCounts(*args):
 		total = 0
 		running = 0
-		for p in Cache.getGlobal('process_iter', Statistics.updateProcessIter):
+		for p in psutil.process_iter():
 			total += 1
-			if p.status() == 'running':
+			if p.is_running() == True and p.status() == 'running':
 				running += 1
 		return (total, running)
