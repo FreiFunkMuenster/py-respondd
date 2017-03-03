@@ -1,4 +1,4 @@
-import netifaces
+import netifaces, psutil
 from .Cache import Cache
 class BasicNode(object):
 
@@ -21,3 +21,18 @@ class BasicNode(object):
 
 	def updateMacAddr(self, *args):
 		return self.getAddrsOfIface(self.domain['bat_iface'])[netifaces.AF_LINK][0]['addr']
+
+	@staticmethod
+	def getProcessList():
+		return Cache.getGlobal('process_list', BasicNode.updateProcessList)
+
+	@staticmethod
+	def updateProcessList(args):
+		res = []
+		for p in psutil.process_iter():
+			try:
+				with p.oneshot():
+					res.append([p.name(), p.cmdline(), p.status()])
+			except psutil.NoSuchProcess as err:
+				print(err)
+		return res

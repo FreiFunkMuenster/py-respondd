@@ -1,4 +1,4 @@
-import glob, socket, re, psutil, netifaces
+import glob, socket, re, netifaces
 from .Cache import Cache
 from .BasicNode import BasicNode
 class Nodeinfo(BasicNode):
@@ -63,15 +63,8 @@ class Nodeinfo(BasicNode):
 	def updateHostname(args):
 		return socket.gethostname()
 
-	def getProcessList(self):
-		return Cache.getGlobal('process_list', Nodeinfo.updateProcessList)
-
-	@staticmethod
-	def updateProcessList(args):
-		return [[p.name(),p.cmdline()] for p in Cache.getGlobal('process_iter', Nodeinfo.updateProcessIter)]
-
 	def isProcessRunning(self, processName, processArg = None):
-		for p in self.getProcessList():
+		for p in BasicNode.getProcessList():
 			if p[0] == processName:
 				if processArg == None:
 					return True
@@ -143,6 +136,3 @@ class Nodeinfo(BasicNode):
 
 
 		return res
-	@staticmethod
-	def updateProcessIter(*args):
-		return psutil.process_iter()

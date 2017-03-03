@@ -112,8 +112,8 @@ class Statistics(BasicNode):
 	def updateProcessCounts(*args):
 		total = 0
 		running = 0
-		for p in psutil.process_iter():
+		for p in BasicNode.getProcessList():
 			total += 1
-			if p.is_running() == True and p.status() == 'running':
+			if p[2] == 'running':
 				running += 1
 		return (total, running)
