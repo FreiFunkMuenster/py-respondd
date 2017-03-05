@@ -2,7 +2,7 @@ import string, subprocess, netifaces
 from .Cache import Cache
 from .BasicNode import BasicNode
 class Neighbours(BasicNode):
-	TT = dict.fromkeys(map(ord, '*[]():'), None)
+	TT = dict.fromkeys(map(ord, '*[]()'), None)
 	def __init__(self, domain):
 		self.domain = domain
 		self.ifMacs = {}
@@ -27,21 +27,28 @@ class Neighbours(BasicNode):
 
 		for line in out.splitlines()[2:-1]:
 			line = [x for x in line.translate(Neighbours.TT).split()]
+
+			# remove colon that occours in older batman versions only
+			ifName = line[4].replace(':', '')
+
 			if len(line) == 0:
 				# skip empty lines
 				continue
 			if line[0] != line[3]:
 				# skip indirect links
 				continue
-			if line[4] not in self.ifMacs:
-				ifMac = netifaces.ifaddresses(line[4])[netifaces.AF_LINK][0]['addr']
-				self.ifMacs[line[4]] = ifMac
+
+			# fetch mac for interface and init dict
+			if ifName not in self.ifMacs:
+				ifMac = netifaces.ifaddresses(ifName)[netifaces.AF_LINK][0]['addr']
+				self.ifMacs[ifName] = ifMac
 				res[ifMac] = {'neighbours': {}}
 			else:
-				ifMac = self.ifMacs[line[4]]
+				ifMac = self.ifMacs[ifName]
 				if ifMac not in res:
 					res[ifMac] = {'neighbours': {}}
 
+			# add neighbour to interface
 			res[ifMac]['neighbours'][line[0]] = {
 				'tq': int(line[2]),
 				'lastseen': float(line[1][:-1])
