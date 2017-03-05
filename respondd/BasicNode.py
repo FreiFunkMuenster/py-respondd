@@ -20,7 +20,11 @@ class BasicNode(object):
 		return Cache.getLocal('iface_mac', self.domain['site_code'], self.updateMacAddr)
 
 	def updateMacAddr(self, *args):
-		return self.getAddrsOfIface(self.domain['bat_iface'])[netifaces.AF_LINK][0]['addr']
+		if 'br_iface' in self.domain and self.domain['br_iface'] != False:
+			idIf = self.domain['br_iface']
+		else:
+			idIf = self.domain['bat_iface']
+		return self.getAddrsOfIface(idIf)[netifaces.AF_LINK][0]['addr']
 
 	@staticmethod
 	def getProcessList():
