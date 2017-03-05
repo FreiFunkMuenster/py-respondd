@@ -26,7 +26,7 @@ class Nodeinfo(BasicNode):
 					'enabled': self.isProcessRunning('python','l2tp_broker')
 				}
 			},
-			'node_id' : self.getMacAddr().replace(':',''),
+			'node_id' : self.getNodeIDmac().replace(':',''),
 			'owner' : {
 				'contact' : 'mail@simon-wuellhorst.de'
 			},
@@ -37,7 +37,7 @@ class Nodeinfo(BasicNode):
 						'interfaces': self.getInterfaceMacs()
 					}
 				},
-				'mac': self.getMacAddr()
+				'mac': self.getNodeIDmac()
 			},
 			'system': {
 				'site_code': self.domain['site_code']
@@ -113,9 +113,8 @@ class Nodeinfo(BasicNode):
 
 	def updateInterfaceMacs(self, *args):
 		ifaces = self.getTunnMacAddrs()
-
 		res = {
-			'other': [self.getMacAddr()]
+			'other': [self.getBatmanMacAddr()]
 		}
 		if self.interfaceTypeRegexPatterns != None:
 			for iface in ifaces:

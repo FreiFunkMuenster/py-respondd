@@ -12,7 +12,7 @@ class Neighbours(BasicNode):
 
 		return {
 			'batadv': self.getNeights(),
-			'node_id' : self.getMacAddr().replace(':',''),
+			'node_id' : self.getNodeIDmac().replace(':',''),
 		}
 
 

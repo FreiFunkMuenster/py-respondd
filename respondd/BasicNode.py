@@ -16,10 +16,16 @@ class BasicNode(object):
 	def updateNetIfAddrs(*args):
 		return netifaces.ifaddresses(args[0])
 
-	def getMacAddr(self):
-		return Cache.getLocal('iface_mac', self.domain['site_code'], self.updateMacAddr)
+	def getBatmanMacAddr(self):
+		return Cache.getLocal('batman_mac', self.domain['site_code'], self.updateBatmanMacAddr)
 
-	def updateMacAddr(self, *args):
+	def updateBatmanMacAddr(self, *args):
+		return self.getAddrsOfIface(self.domain['bat_iface'])[netifaces.AF_LINK][0]['addr']
+
+	def getNodeIDmac(self):
+		return Cache.getLocal('iface_mac', self.domain['site_code'], self.updateNodeIDmac)
+
+	def updateNodeIDmac(self, *args):
 		if 'br_iface' in self.domain and self.domain['br_iface'] != False:
 			idIf = self.domain['br_iface']
 		else:

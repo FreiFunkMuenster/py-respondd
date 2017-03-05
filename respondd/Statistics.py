@@ -58,7 +58,7 @@ class Statistics(BasicNode):
 				'running': running,
 				'total': total,
 			},
-			'node_id' : self.getMacAddr().replace(':','')
+			'node_id' : self.getNodeIDmac().replace(':','')
 		}
 
 	def prepareBatNeigh(self):
