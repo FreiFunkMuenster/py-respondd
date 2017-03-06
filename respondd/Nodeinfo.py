@@ -80,7 +80,7 @@ class Nodeinfo(BasicNode):
 
 	def updateV6Addrs(self, *args):
 		addrs = self.getAddrsOfIface(self.domain['bat_iface'])[netifaces.AF_INET6]
-		return [x['addr'] for x in addrs]
+		return [x['addr'].split('%')[0] for x in addrs]
 
 	def cpuInfo(self):
 		return Cache.getGlobal('cpu_info', Nodeinfo.updateCpuInfo)
