@@ -46,6 +46,9 @@ class Nodeinfo(BasicNode):
 			'hardware': {
 				'model': cpuType,
 				'nproc': cpuCount
+			},
+			'advanced-stats': {
+				'store-stats': True
 			}
 		}
 		return nodeInfo
