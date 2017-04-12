@@ -6,8 +6,12 @@ class Nodeinfo(BasicNode):
 		self.domain = domainData
 		self.globalData = globalData
 		self.interfaceTypeRegexPatterns = None
+		self.additionalStaticNodeInfo = {}
+
 		if 'interface_type_regex_patterns' in self.globalData:
 			self.interfaceTypeRegexPatterns = self.prepareInterfaceRegex(self.globalData['interface_type_regex_patterns'])
+		if 'additional_static_nodeinfo' in self.globalData:
+			self.additionalStaticNodeInfo.update(self.globalData['additional_static_nodeinfo'])
 
 	def get(self):
 		cpuCount, cpuType = self.cpuInfo()
@@ -27,9 +31,6 @@ class Nodeinfo(BasicNode):
 				}
 			},
 			'node_id' : self.getNodeIDmac().replace(':',''),
-			'owner' : {
-				'contact' : 'mail@simon-wuellhorst.de'
-			},
 			'network': {
 				'addresses': self.getV6Addrs(),
 				'mesh': {
@@ -46,11 +47,11 @@ class Nodeinfo(BasicNode):
 			'hardware': {
 				'model': cpuType,
 				'nproc': cpuCount
-			},
-			'advanced-stats': {
-				'store-stats': True
 			}
 		}
+
+		nodeInfo.update(self.additionalStaticNodeInfo)
+
 		return nodeInfo
 
 	def prepareInterfaceRegex(self,config):
