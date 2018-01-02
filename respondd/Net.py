@@ -61,7 +61,7 @@ class Net(object):
 			# unconfigured domain
 			return
 		for requestType in requestTypes:
-			print(requestType, senderAddr, interface, site)
+		#	print(requestType, senderAddr, interface, site)
 			message = {}
 			message[requestType] = self.handles[site][requestType].get()
 			self.sender(message,sender)
