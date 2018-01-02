@@ -51,7 +51,7 @@ class Net(object):
 			# unknown request
 			return
 
-		requestType = str(data[4:], 'utf-8') # fixme: implement multiple request types at once
+		requestTypes = str(data[4:], 'utf-8').split(' ')
 
 		senderAddr, interface = sender[0].split('%')
 
@@ -60,10 +60,11 @@ class Net(object):
 		if site not in self.handles:
 			# unconfigured domain
 			return
-		# print(requestType, senderAddr, interface, site)
-		message = {} 
-		message[requestType] = self.handles[site][requestType].get()
-		self.sender(message,sender)
+		for requestType in requestTypes:
+			print(requestType, senderAddr, interface, site)
+			message = {}
+			message[requestType] = self.handles[site][requestType].get()
+			self.sender(message,sender)
 
 
 	def sender(self, message, sender):
