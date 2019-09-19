@@ -60,11 +60,11 @@ class Net(object):
 		if site not in self.handles:
 			# unconfigured domain
 			return
+		message = {}
 		for requestType in requestTypes:
 		#	print(requestType, senderAddr, interface, site)
-			message = {}
 			message[requestType] = self.handles[site][requestType].get()
-			self.sender(message,sender)
+		self.sender(message,sender)
 
 
 	def sender(self, message, sender):
