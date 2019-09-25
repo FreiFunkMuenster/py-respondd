@@ -47,8 +47,7 @@ class Nodeinfo(BasicNode):
 			'hardware': {
 				'model': cpuType,
 				'nproc': cpuCount
-			},
-			'VPN': True
+			}
 		}
 
 		nodeInfo.update(self.additionalStaticNodeInfo)

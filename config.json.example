@@ -17,7 +17,8 @@
 			"node_type" : {
 				"is_infrastructure" : true,
 				"type" : "gateways"
-			}
+			},
+			"vpn" : true
 		}
 	},
 	"domains" : [
